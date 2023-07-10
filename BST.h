@@ -16,11 +16,11 @@ typedef struct node{
 } NodeType, *NodePtr, BST, *BSTPtr;
 
 //Delete element in the BST based on the product ID
-void removeElement(BST **list, int prodID); //using iterative method
-BST *deleteElement(BST *list, int prodID); //using recursive method
+void removeElement(BSTPtr* list, int prodID); //using iterative method
+BSTPtr deleteElement(BSTPtr list, int prodID); //using recursive method
 
 //Adding element to BST
-void addElement(BST *list, Product item); //recursive method
+BSTPtr addElement(BSTPtr list, Product item); //recursive method
 void insertBST(BSTPtr *list, Product item); //iterative method
 
 //Tree traversal all in recursive method
@@ -29,14 +29,14 @@ void preorderBST(BSTPtr list);
 void postorderBST(BSTPtr list);
 
 //Other functions
-BST *newBST();
-void initBST(BST **list);
-bool isEmpty(BST *list);
+BSTPtr newBST();
+void initBST(BSTPtr *list);
+bool isEmpty(BSTPtr list);
 Product createProduct(int id, char *name, int qty, float price);
 void displayProduct(Product prod); //use the following format {<id> | <prodName>} replacing the angular brackets with data
-BST *max(BST *list);
-BST *min(BST *list);
-bool isMember(BST *list, int prodID);
+BSTPtr max(BSTPtr list);
+BSTPtr min(BSTPtr list);
+bool isMember(BSTPtr list, int prodID);
 #endif
 
 

@@ -7,19 +7,19 @@
 //Delete element in the BST based on the product ID
 
 //using iterative method
-void removeElement(BST **list, int prodID){
-	BST* temp, **trav1, **trav2;
+void removeElement(BSTPtr* list, int prodID){
+	BSTPtr temp, *trav1 = list, *trav2;
 	
-	for(trav1 = list; *trav1 != NULL && (*trav1)->data.prodID != prodID){
+	while(*trav1 != NULL && (*trav1)->data.prodID != prodID){
 		trav1 = (prodID < (*trav1)->data.prodID)? &(*trav1)->left :  &(*trav1)->right;
 	}
 	
 		if((*trav1) != NULL){
-			if((*trav)->left == NULL){
+			if((*trav1)->left == NULL){
 				temp = *trav1;
 				*trav1 = temp->right;
 				free(temp);
-			} else if((*trav)->right == NULL){
+			} else if((*trav1)->right == NULL){
 				temp = *trav1;
 				*trav1 = temp->left;
 				free(temp);
@@ -36,8 +36,8 @@ void removeElement(BST **list, int prodID){
 	}
 }
 //using recursive method, use min or max function
-BST *deleteElement(BST *list, int prodID){
-	BST *deletedBST = list;
+BSTPtr deleteElement(BSTPtr list, int prodID){
+	BSTPtr deletedBST = list;
 	if(isEmpty(deletedBST)){
 		deletedBST = NULL;
 	} else if(prodID < deletedBST->data.prodID){
@@ -72,27 +72,30 @@ BST *deleteElement(BST *list, int prodID){
 //Adding element to BST based on the productID
 
 //recursive method
-void addElement(BST *list, Product item){
+BSTPtr addElement(BSTPtr list, Product item){
 	if(isEmpty(list)){
-		list = malloc(sizeof(BST));
-		if(*list != NULL){
-			(*list)->data = item;
-			(*list)->left = (*list)->right = NULL;
+		BSTPtr node = malloc(sizeof(BST));
+		if(node != NULL){
+			node->data = item;
+			node->left = node->right = NULL;
+			list = node;
 		}
 	}else{
 		if(item.prodID < list->data.prodID){
-			addElement(&((*list)->left), item);
+			list->left = addElement(list->left, item);
 		}else{
-			addElement(&((*list)->right), item);
+			list->right = addElement(list->right, item);
 		}
 	}
+	
+	return list;
 } 
 //iterative method
 void insertBST(BSTPtr *list, Product item){
 	while(*list != NULL && (*list)->data.prodID != item.prodID){
 		list = (item.prodID < (*list)->data.prodID)? &(*list)->left: &(*list)->right;
 	}
-	if(isEmpty(list)){
+	if(isEmpty(*list)){
 		list = malloc(sizeof(BST));
 		if(*list != NULL){
 			(*list)->data = item;
@@ -119,26 +122,22 @@ void preorderBST(BSTPtr list){
 void postorderBST(BSTPtr list){
 	if(!isEmpty(list)){
 		postorderBST(list->left);
-		postOrderBST(list->right);
+		postorderBST(list->right);
 		displayProduct(list->data);
 	}
 }
 
 //Other functions
-BST *newBST(){
-	BST *b;
-	
-	b->left = NULL;
-	b->right = NULL;
+BSTPtr newBST(){
+	BSTPtr b = NULL;
 	
 	return b;
 }
-void initBST(BST **list){
-	(**list)->left = NULL;
-	(**list)->right = NULL;
+void initBST(BSTPtr *list){
+	*list = NULL;
 }
-bool isEmpty(BST *list){
-	return(*list == NULL)? true: false;
+bool isEmpty(BSTPtr list){
+	return (list == NULL)? true: false;
 }
 Product createProduct(int id, char *name, int qty, float price){
 	Product prod;
@@ -154,8 +153,8 @@ Product createProduct(int id, char *name, int qty, float price){
 void displayProduct(Product prod){
 	printf("{ %5d | %10s}", prod.prodID, prod.prodName);
 } 
-BST *max(BST *list){
-	BST *biggest;
+BSTPtr max(BSTPtr list){
+	BSTPtr biggest;
 	
 	if(isEmpty(list)){
 		biggest = NULL;
@@ -166,8 +165,8 @@ BST *max(BST *list){
 	}
 	return biggest;
 }
-BST *min(BST *list){
-	BST *smallest;
+BSTPtr min(BSTPtr list){
+	BSTPtr smallest;
 	
 	if(isEmpty(list)){
 		smallest = NULL;
@@ -176,16 +175,16 @@ BST *min(BST *list){
 	}else{
 		smallest = min(list->left);
 	}
-	return smallestt;
+	return smallest;
 }
-}
-bool isMember(BST *list, int prodID){
+
+bool isMember(BSTPtr list, int prodID){
 	bool b = false;
 	if(!isEmpty(list)){
 		if(list->data.prodID = prodID){
 			b = true;
 		}else{
-			b=(prodID < list->data)? isMember(list->left, prodID): isMember(list->right, prodID);
+			b=(prodID < list->data.prodID)? isMember(list->left, prodID): isMember(list->right, prodID);
 		}
 	}
 	return b;
